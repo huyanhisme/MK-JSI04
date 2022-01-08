@@ -1,6 +1,5 @@
 let getData = async (city) => {
-    let allData = await fetch("https://static.pipezero.com/covid/data.json?fbclid=IwAR0ZAK4Kw7s9G9kM0ptiX3lOEBnpA2ZY9gBDhGf4HEC8fE8cFfKu4NTEkSk")
-
+    let allData = await fetch("https://static.pipezero.com/covid/data.json")
     let data = await allData.json()
 
     renderData(data, city)
@@ -9,9 +8,8 @@ let getData = async (city) => {
 
 let renderData = (data, city) => {
     var arr = [].concat(data.locations)
-    arr.filter((searchInput) => {
+    let s = arr.filter((searchInput) => {
         if (searchInput.name === city) {
-            document.querySelector('.rcm').innerHTML = ''
             console.log(searchInput)
             let name = searchInput.name
             let cases = searchInput.cases

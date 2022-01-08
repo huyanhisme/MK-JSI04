@@ -1,0 +1,48 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.form-SignUp {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(149, 205, 231);
+  padding: 20px;
+  border-radius: 8px;
+}
+.label {
+  margin: auto;
+  padding: 20px;
+  color: rgb(125, 16, 235);
+  font-size: 22px;
+}
+input {
+  padding: 5px 30px 5px 10px;
+  margin: 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgb(219, 219, 219);
+}
+button {
+  border: none;
+  width: 70px;
+  margin: auto;
+  border-radius: 8px;
+  padding: 3px;
+  background-color: rgb(235, 122, 122);
+  cursor: pointer;
+}
+a{
+  color:blue;
+  font-size:13px;
+  text-align: center;
+
+}
+div{
+  color:red !important;
+}
