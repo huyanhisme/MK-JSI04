@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css" />
+    <title>Sử dụng Storage Firebase</title>
+  </head>
+  <body>
+    <div class="container">
+      <img src="" alt="" id="myImg" />
+      <br />
+      <br />
+      <input type="file" id="upfile" />
+      <br />
+      <label for="upfile" id="status">Status upload</label>
+      <br />
+      <button id="btnUpload">Upload Image</button>
+    </div>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.4/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.4/firebase-analytics.js";
+
+      import {
+        getStorage,
+        ref,
+        uploadBytes,
+        uploadBytesResumable,
+        getDownloadURL,
+      } from "https://www.gstatic.com/firebasejs/9.6.4/firebase-storage.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBc5XAo4W9IO8UZv431uBViDkkEHr83Pq8",
+        authDomain: "test-6934e.firebaseapp.com",
+        projectId: "test-6934e",
+        storageBucket: "test-6934e.appspot.com",
+        messagingSenderId: "267657461178",
+        appId: "1:267657461178:web:972a20d1ce933661b3b183",
+        measurementId: "G-32LJQW6NMM",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+
+      let inputFile = document.querySelector("input#upfile");
+
+      let files = new Array();
+      //đọc file
+      let reader = new FileReader();
+
+      inputFile.onchange = (e) => {
+        files = e.target.files;
+
+        reader.readAsDataURL(files[0]);
+        // console.log(`hello`);
+      };
+      reader.onload = () => {
+        // console.log(reader.result);
+        document.querySelector("img#myImg").src = reader.result;
+      };
+      //   ------------- Use storage firebase-----------------
+
+      document.querySelector("button#btnUpload").onclick = async () => {
+        const storage = getStorage();
+        const storageRef = ref(storage, "Images/" + files[0].name);
+        const metadata = {
+          contentType: files[0].type,
+        };
+        // 'file' comes from the Blob or File API
+        const uploadTask = uploadBytesResumable(storageRef, files[0], metadata);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            // console.log("Upload is " + progress + "% done");
+            document.querySelector('label#status').innerHTML = "Upload is " + progress + "% done";
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {},
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              console.log("File available at ", downloadURL);
+            });
+          }
+        );
+      };
+    </script>
+  </body>
+</html>
